@@ -93,27 +93,23 @@ OVERLAP = 150
 #  НАРЕЗКА НА ЧАНКИ
 # ====================================================================
 
-def chunk_text(text: str, size: int, overlap: int) -> list:
-    """Режет текст на куски по `size` символов с нахлёстом `overlap`.
+def chunk_text(text: str, size: int, overlap: int) -> list[str]:
+    if size <= 0 or overlap < 0 or overlap >= size:
+        raise ValueError("Некорректные параметры нарезки")
 
-    TODO 1: сейчас функция возвращает весь текст одним куском — это заглушка.
-    С ней индекс соберётся и поиск заработает, только искать будет по целым
-    записям. Насколько это плохо, увидишь в практике 2: там есть замер.
+    chunks = []
+    step = size - overlap
+    start = 0
 
-    Что сделать:
-      1. Если overlap >= size — поднять ValueError с понятным сообщением:
-         шаг окна получится нулевым, и цикл никогда не кончится.
-      2. Шаг окна: step = size - overlap.
-      3. Идти по тексту от start = 0, пока start < len(text):
-         кусок = text[start:start + size];
-         если в куске есть непробельные символы — добавить его в список;
-         сдвинуть start на step.
-      4. Вернуть список кусков.
+    while start < len(text):
+        piece = text[start:start + size]
 
-    Проверить себя: chunk_text('абвгд'*100, 200, 50) -> 4 куска
-    длиной 200, 200, 200 и 50 символов.
-    """
-    return [text]
+        if piece.strip():
+            chunks.append(piece)
+
+        start += step
+
+    return chunks
 
 
 # ====================================================================
